@@ -256,8 +256,13 @@ class convertModisGDAL:
         dst_ds.SetProjection(self.dst_wkt)
         dst_ds.SetGeoTransform(self.dst_gt)
         if fill_value:
-            dst_ds.GetRasterBand(1).SetNoDataValue(float(fill_value))
-            dst_ds.GetRasterBand(1).Fill(float(fill_value))
+            try:
+                dst_ds.GetRasterBand(1).SetNoDataValue(float(fill_value))
+                dst_ds.GetRasterBand(1).Fill(float(fill_value))
+            except:
+                print("Exception in setting nodata value of {fill_value}. Setting 255 as nodata".format(fill_value=fill_value))
+                dst_ds.GetRasterBand(1).SetNoDataValue(float(255))
+                dst_ds.GetRasterBand(1).Fill(float(255))
         cbk = self._progressCallback
         # value for last parameter of above self._progressCallback
         cbk_user_data = None
